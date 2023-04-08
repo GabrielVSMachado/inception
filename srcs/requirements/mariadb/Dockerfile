@@ -10,6 +10,6 @@ RUN apk update; \
 COPY --chown=root:root mariadb_entrypoint.sh /usr/bin/mariadb_entrypoint.sh
 RUN chmod +x /usr/bin/mariadb_entrypoint.sh
 
-EXPOSE 3306
+HEALTHCHECK --interval=20s --retries=3 CMD mariadb-admin ping -h localhost
 
 ENTRYPOINT ["mariadb_entrypoint.sh"]

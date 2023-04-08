@@ -33,4 +33,6 @@ mariadb \
   -e "FLUSH PRIVILEGES; \
       ALTER USER 'root'@'localhost' IDENTIFIED BY '$MARIADB_RANDOM_PASSWORD'"
 
-exec mariadbd-server restart --user=mysql
+kill -9 $(cat /var/lib/mysql/$HOSTNAME.pid)
+
+exec mariadbd --user=mysql
