@@ -1,18 +1,35 @@
 #setup
-FROM alpine:3.16
+FROM alpine:3.16 as genCertificate
+
+WORKDIR /
+
+RUN apk update; apk add openssl
+
+COPY certificate.sh .
+
+RUN chmod +x certificate.sh; sh certificate.sh
+
+FROM alpine:3.16 as final
+
+ENV DOMAIN_INCEPTION="www.inception.com"
 
 RUN apk update; \
     apk add nginx; \
     adduser -D -g 'www' www; \
     mkdir /www; \
     chown -R www:www /var/lib/nginx; \
-    chown -R www:www /www;
+    chown -R www:www /www; \
+    chown -RL www:www /var/lib/nginx
 
+COPY --from=genCertificate --chown=www:www \
+      ${DOMAIN_INCEPTION}.key ${DOMAIN_INCEPTION}.crt /etc/nginx/
 
 #index.html
 COPY index.html /www
 
 #nginx config
-COPY nginx.conf /etc/nginx/
+COPY --chown=www:www nginx.conf /etc/nginx/
+
+USER www
 
 CMD ["nginx"]

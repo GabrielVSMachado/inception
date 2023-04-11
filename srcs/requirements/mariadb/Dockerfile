@@ -12,4 +12,4 @@ RUN chmod +x /usr/bin/mariadb_entrypoint.sh
 
 HEALTHCHECK --interval=20s --retries=3 CMD mariadb-admin ping -h localhost
 
-ENTRYPOINT ["mariadb_entrypoint.sh"]
+# ENTRYPOINT ["mariadb_entrypoint.sh"]

@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  db:
+    build: ./requirements/mariadb
+    container_name: mariadb
+    env_file:
+      - .env
+    volumes:
+      - mariadb:/var/lib/mysql
+  # web_app:
+  #   build: ./requirements/wordpress_php
+  #   container_name: wordpress
+  #   ports:
+  #     - '8088:80'
+  #   volumes:
+  #     - /Users/gabriel.machado/data/wordpress:/usr/share/webapps/wordpress
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  #
+volumes:
+  mariadb:
+    driver_opts:
+        o: bind
+        type: none
+        device: $HOME/data/mysql
