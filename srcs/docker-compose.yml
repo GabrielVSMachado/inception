@@ -8,20 +8,31 @@ services:
       - .env
     volumes:
       - mariadb:/var/lib/mysql
-  # web_app:
-  #   build: ./requirements/wordpress_php
-  #   container_name: wordpress
-  #   ports:
-  #     - '8088:80'
-  #   volumes:
-  #     - /Users/gabriel.machado/data/wordpress:/usr/share/webapps/wordpress
-  #   depends_on:
-  #     db:
-  #       condition: service_healthy
+    networks:
+      - inception
+    ports:
+      - '3306:3306'
+  web_app:
+    build: ./requirements/wordpress_php
+    container_name: wordpress
+    ports:
+      - '8000:8000'
+    volumes:
+      - wordpress:/usr/share/webapps/wordpress
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - inception
   #
 volumes:
   mariadb:
-    driver_opts:
-        o: bind
-        type: none
-        device: $HOME/data/mysql
+    # driver_opts:
+    #     o: bind
+    #     type: none
+    #     device: $HOME/data/mysql
+  wordpress:
+
+networks:
+  inception:
+    name: inception

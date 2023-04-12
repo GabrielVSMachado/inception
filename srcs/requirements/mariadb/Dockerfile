@@ -7,9 +7,13 @@ RUN apk update; \
     ln -sf /usr/share/mariadb/mysql.server /usr/bin/mariadb-server
 
 
+EXPOSE 3306
+
 COPY --chown=root:root mariadb_entrypoint.sh /usr/bin/mariadb_entrypoint.sh
 RUN chmod +x /usr/bin/mariadb_entrypoint.sh
 
-HEALTHCHECK --interval=20s --retries=3 CMD mariadb-admin ping -h localhost
+HEALTHCHECK --interval=20s --retries=3 \
+CMD mariadb-admin -u root --password=$MARIADB_ROOT_PASSWORD ping -h localhost
 
-# ENTRYPOINT ["mariadb_entrypoint.sh"]
+ENTRYPOINT ["mariadb_entrypoint.sh"]
+

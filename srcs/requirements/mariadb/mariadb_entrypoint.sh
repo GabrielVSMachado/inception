@@ -7,10 +7,8 @@ mariadb-server start
 
 CHARACTERS='a-zA-Z0-9"!@#$%&*()-_=+[],.?^`{}'
 
-MARIADB_RANDOM_PASSWORD=$(tr -dc $CHARACTERS </dev/urandom | head -c 80)
-
 mariadb-secure-installation <<EOF
-  $MARIADB_RANDOM_PASSWORD
+  $MARIADB_ROOT_PASSWORD
   Y
   n
   Y
@@ -22,17 +20,19 @@ EOF
 
 mariadb \
   -u root \
-  -e "CREATE USER 'gvitor-s'@'localhost' IDENTIFIED BY '$MARIADB_USER_PASSWORD'"
+  -e "CREATE USER 'gvitor-s'@'%' IDENTIFIED BY '$MARIADB_USER_PASSWORD'"
 
 mariadb \
   -u root \
-  -e "GRANT ALL PRIVILEGES ON mysql.* TO 'gvitor-s'@'localhost'; FLUSH PRIVILEGES"
+  -e "GRANT ALL PRIVILEGES ON mysql.* TO 'gvitor-s'@'%'; FLUSH PRIVILEGES"
 
 mariadb \
   -u root \
   -e "FLUSH PRIVILEGES; \
-      ALTER USER 'root'@'localhost' IDENTIFIED BY '$MARIADB_RANDOM_PASSWORD'"
+      ALTER USER 'root'@'localhost' IDENTIFIED BY '$MARIADB_ROOT_PASSWORD'"
 
 kill -9 $(cat /var/lib/mysql/$HOSTNAME.pid)
 
-exec mariadbd --user=mysql
+sed -i 's/skip-networking/#skip-networking/g' /etc/my.cnf.d/mariadb-server.cnf
+
+exec mariadbd --user=mysql --bind-address=0.0.0.0
