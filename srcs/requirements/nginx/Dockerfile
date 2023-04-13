@@ -19,17 +19,13 @@ RUN apk update; \
     mkdir /www; \
     chown -R www:www /var/lib/nginx; \
     chown -R www:www /www; \
-    chown -RL www:www /var/lib/nginx
+    chown -RL www:www /var/lib/nginx; \
+    ln -s /www/wordpress /var/www/localhost/htdocs/wordpress
 
 COPY --from=genCertificate --chown=www:www \
       ${DOMAIN_INCEPTION}.key ${DOMAIN_INCEPTION}.crt /etc/nginx/
 
-#index.html
-COPY index.html /www
-
 #nginx config
 COPY --chown=www:www nginx.conf /etc/nginx/
 
-USER www
-
-CMD ["nginx"]
+CMD ["tail", "-f"]

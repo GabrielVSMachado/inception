@@ -24,7 +24,14 @@ mariadb \
 
 mariadb \
   -u root \
-  -e "GRANT ALL PRIVILEGES ON mysql.* TO 'gvitor-s'@'%'; FLUSH PRIVILEGES"
+  -e "GRANT ALL PRIVILEGES ON *.* TO 'gvitor-s'@'%'; FLUSH PRIVILEGES"
+
+mariadb \
+  -u root \
+  -e "CREATE DATABASE wordpress;
+      GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpress'@'%' IDENTIFIED BY 'password';
+      FLUSH PRIVILEGES
+    "
 
 mariadb \
   -u root \

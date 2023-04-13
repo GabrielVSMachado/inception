@@ -12,11 +12,20 @@ services:
       - inception
     ports:
       - '3306:3306'
+  nginx:
+    build: ./requirements/nginx
+    container_name: nginx
+    volumes:
+      - wordpress:/www/wordpress
+    ports:
+      - '8000:443'
+    networks:
+      - inception
   web_app:
-    build: ./requirements/wordpress_php
+    build: ./requirements/wordpress
     container_name: wordpress
     ports:
-      - '8000:8000'
+      - '9000:9000'
     volumes:
       - wordpress:/usr/share/webapps/wordpress
     depends_on:
@@ -24,13 +33,9 @@ services:
         condition: service_healthy
     networks:
       - inception
-  #
+
 volumes:
   mariadb:
-    # driver_opts:
-    #     o: bind
-    #     type: none
-    #     device: $HOME/data/mysql
   wordpress:
 
 networks:
