@@ -7,7 +7,7 @@ services:
     env_file:
       - .env
     volumes:
-      - mariadb:/var/lib/mysql
+      - v_mariadb:/var/lib/mysql
     networks:
       - inception
     ports:
@@ -16,7 +16,7 @@ services:
     build: ./requirements/nginx
     container_name: nginx
     volumes:
-      - wordpress:/www/wordpress
+      - v_wordpress:/www
     ports:
       - '8000:443'
     networks:
@@ -27,7 +27,7 @@ services:
     ports:
       - '9000:9000'
     volumes:
-      - wordpress:/usr/share/webapps/wordpress
+      - v_wordpress:/usr/share/webapps/wordpress
     depends_on:
       db:
         condition: service_healthy
@@ -35,8 +35,8 @@ services:
       - inception
 
 volumes:
-  mariadb:
-  wordpress:
+  v_mariadb:
+  v_wordpress:
 
 networks:
   inception:
