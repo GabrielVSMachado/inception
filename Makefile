@@ -1,7 +1,7 @@
 COMMAND = docker-compose -f ./srcs/docker-compose.yml
 
 all:
-	$(COMMAND) up
+	$(COMMAND) up --build
 
 clean:
 	$(COMMAND) down

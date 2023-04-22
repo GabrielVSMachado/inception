@@ -16,7 +16,7 @@ services:
     build: ./requirements/nginx
     container_name: nginx
     volumes:
-      - v_wordpress:/www
+      - v_wordpress:/www/wordpress
     ports:
       - '8000:443'
     networks:
@@ -27,7 +27,7 @@ services:
     ports:
       - '9000:9000'
     volumes:
-      - v_wordpress:/usr/share/webapps/wordpress
+      - v_wordpress:/www/wordpress
     depends_on:
       db:
         condition: service_healthy
