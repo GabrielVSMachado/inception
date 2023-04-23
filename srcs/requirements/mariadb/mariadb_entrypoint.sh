@@ -5,8 +5,6 @@ set -e
 #rise service
 mariadb-server start
 
-CHARACTERS='a-zA-Z0-9"!@#$%&*()-_=+[],.?^`{}'
-
 mariadb-secure-installation <<EOF
   $MARIADB_ROOT_PASSWORD
   Y
@@ -17,10 +15,9 @@ mariadb-secure-installation <<EOF
   Y
 EOF
 
-
 mariadb \
   -u root \
-  -e "CREATE USER 'gvitor-s'@'%' IDENTIFIED BY '$MARIADB_USER_PASSWORD'"
+  -e "CREATE USER IF NOT EXISTS 'gvitor-s'@'%' IDENTIFIED BY '$MARIADB_USER_PASSWORD'"
 
 mariadb \
   -u root \
@@ -28,7 +25,7 @@ mariadb \
 
 mariadb \
   -u root \
-  -e "CREATE DATABASE wordpress;
+  -e "CREATE DATABASE IF NOT EXISTS wordpress;
       GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpress'@'%' IDENTIFIED BY 'password';
       FLUSH PRIVILEGES
     "
@@ -38,8 +35,11 @@ mariadb \
   -e "FLUSH PRIVILEGES; \
       ALTER USER 'root'@'localhost' IDENTIFIED BY '$MARIADB_ROOT_PASSWORD'"
 
-kill -9 $(cat /var/lib/mysql/$HOSTNAME.pid)
+mariadb-server stop
 
-sed -i 's/skip-networking/#skip-networking/g' /etc/my.cnf.d/mariadb-server.cnf
+while [[ $(mariadb-server status | awk '{print $1}') != 'ERROR!' ]]; do
+  echo "Waiting..."
+done
+echo "Done!"
 
 exec mariadbd --user=mysql --bind-address=0.0.0.0
