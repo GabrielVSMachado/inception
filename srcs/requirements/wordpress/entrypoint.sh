@@ -30,4 +30,4 @@ if [[ $(ls /www/wordpress | wc -l) -eq 0 ]]; then
     $WORDPRESS_CONFIG_PATH
 fi
 
-exec php-fpm8 --nodaemonize
+exec php-fpm8 --nodaemonize --force-stderr

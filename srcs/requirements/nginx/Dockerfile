@@ -23,4 +23,4 @@ COPY --from=genCertificate ${DOMAIN_INCEPTION}.key ${DOMAIN_INCEPTION}.crt /etc/
 #nginx config
 COPY nginx.conf /etc/nginx/
 
-CMD ["tail", "-f"]
+ENTRYPOINT ["nginx", "-g", "daemon off;error_log /dev/stdout warn;"]
