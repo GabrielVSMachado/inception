@@ -24,6 +24,9 @@ services:
   web_app:
     build: ./requirements/wordpress
     container_name: wordpress
+    environment:
+        MARIADB_USER_PASSWORD: ${MARIADB_USER_PASSWORD}
+        MARIADB_USER: ${MARIADB_USER}
     ports:
       - '9000:9000'
     volumes:

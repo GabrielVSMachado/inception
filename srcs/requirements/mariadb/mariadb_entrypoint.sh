@@ -25,13 +25,6 @@ mariadb \
 
 mariadb \
   -u root \
-  -e "CREATE DATABASE IF NOT EXISTS wordpress;
-      GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpress'@'%' IDENTIFIED BY 'password';
-      FLUSH PRIVILEGES
-    "
-
-mariadb \
-  -u root \
   -e "FLUSH PRIVILEGES; \
       ALTER USER 'root'@'localhost' IDENTIFIED BY '$MARIADB_ROOT_PASSWORD'"
 
