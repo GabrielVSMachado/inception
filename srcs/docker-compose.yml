@@ -18,7 +18,7 @@ services:
     volumes:
       - v_wordpress:/www/wordpress
     ports:
-      - '8000:443'
+      - '443:443'
     networks:
       - inception
   web_app:

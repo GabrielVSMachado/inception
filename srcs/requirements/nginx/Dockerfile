@@ -23,4 +23,6 @@ COPY --from=genCertificate ${DOMAIN_INCEPTION}.key ${DOMAIN_INCEPTION}.crt /etc/
 #nginx config
 COPY nginx.conf /etc/nginx/
 
+EXPOSE 443
+
 ENTRYPOINT ["nginx", "-g", "daemon off;error_log /dev/stdout warn;"]

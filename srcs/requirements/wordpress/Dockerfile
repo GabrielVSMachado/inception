@@ -29,4 +29,6 @@ WORKDIR /www
 COPY entrypoint.sh /usr/bin/entrypoint.sh
 RUN chmod +x /usr/bin/entrypoint.sh
 
+EXPOSE 9000
+
 ENTRYPOINT ["entrypoint.sh"]
