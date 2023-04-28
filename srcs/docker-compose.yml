@@ -2,8 +2,14 @@ version: '3.9'
 
 services:
   db:
-    build: ./requirements/mariadb
+    build:
+      context: ./requirements/mariadb
+      args:
+        MARIADB_USER: ${MARIADB_USER}
+        MARIADB_USER_PASSWORD: ${MARIADB_USER_PASSWORD}
+        MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
     container_name: mariadb
+    image: mariadb
     env_file:
       - .env
     volumes:
@@ -12,8 +18,11 @@ services:
       - inception
     ports:
       - '3306:3306'
+
   nginx:
-    build: ./requirements/nginx
+    build:
+      context: ./requirements/nginx
+    image: nginx
     container_name: nginx
     volumes:
       - v_wordpress:/www/wordpress
@@ -21,8 +30,11 @@ services:
       - '443:443'
     networks:
       - inception
+
   web_app:
-    build: ./requirements/wordpress
+    build:
+      context: ./requirements/wordpress
+    image: wordpress
     container_name: wordpress
     environment:
         MARIADB_USER_PASSWORD: ${MARIADB_USER_PASSWORD}
