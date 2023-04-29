@@ -2,7 +2,12 @@
 
 set -e
 
-if [[ $1 == "entrypoint" ]]; then
+declare -g DATABASE_ALREADY_EXISTS
+
+entrypoint() {
+
+mariadb-install-db --user=mysql --datadir=/var/lib/mysql
+
 mariadb-server start
 
 mariadb-secure-installation <<EOF
@@ -27,16 +32,20 @@ mariadb \
 
 mariadb-server stop
 
-elif [[ $1 == "health_check" ]]; then
+}
 
-mariadb-admin \
-  -u root \
-  --password=$MARIADB_ROOT_PASSWORD \
-  ping -h localhost
+if [ -f "/var/lib/mysql" ]; then
+  DATABASE_ALREADY_EXISTS="true"
+fi
+
+
+
+if [ -z "$DATABASE_ALREADY_EXISTS" ]; then
+
+echo "Mariadb ready to start !!!"
 
 else
 
-echo "Wrong Argument!!!"
-exit 1
+entrypoint
 
 fi

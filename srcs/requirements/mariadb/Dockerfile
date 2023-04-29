@@ -6,22 +6,17 @@ ARG MARIADB_USER
 
 RUN apk update; \
     apk add mysql=10.6.12-r0 mysql-client=10.6.12-r0; \
-    mariadb-install-db --user=mysql --datadir=/var/lib/mysql; \
     ln -sf /usr/share/mariadb/mysql.server /usr/bin/mariadb-server; \
-    sed -i 's/skip-networking/#skip-networking/g' /etc/my.cnf.d/mariadb-server.cnf; \
-    chown -R mysql /var/lib/mysql
+    sed -i 's/skip-networking/#skip-networking/g' /etc/my.cnf.d/mariadb-server.cnf
 
-COPY --chown=root:root setup.sh /usr/bin/
 
-RUN chmod +x /usr/bin/setup.sh; \
-    setup.sh "entrypoint"
-
-HEALTHCHECK --interval=15s --retries=3 CMD setup.sh "health_check"
+COPY --chown=root:root healthcheck.sh entrypoint.sh /usr/bin/
+RUN chmod +x /usr/bin/healthcheck.sh /usr/bin/entrypoint.sh
 
 EXPOSE 3306
 
 VOLUME /var/lib/mysql
 
-USER mysql
+ENTRYPOINT ["entrypoint.sh"]
 
-ENTRYPOINT ["mariadbd", "--bind-address=0.0.0.0"]
+CMD ["mariadbd", "--user=mysql"]
