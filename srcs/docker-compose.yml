@@ -4,14 +4,15 @@ x-inception-depends-on: &inception-depends-on
   db:
     condition: service_healthy
 
+x-wordpress-volume: &wordpress-volume
+  - type: bind
+    source: /home/gvitor-s/data/wordpress
+    target: /www/wordpress
+
 services:
   db:
     build:
       context: ./requirements/mariadb
-      args:
-        MARIADB_USER: ${MARIADB_USER}
-        MARIADB_USER_PASSWORD: ${MARIADB_USER_PASSWORD}
-        MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
     container_name: mariadb
     image: mariadb
     env_file:
@@ -34,8 +35,7 @@ services:
       context: ./requirements/nginx
     image: nginx
     container_name: nginx
-    volumes:
-      - v_wordpress:/www/wordpress
+    volumes: *wordpress-volume
     ports:
       - '443:443'
     networks:
@@ -52,14 +52,10 @@ services:
         MARIADB_USER: ${MARIADB_USER}
     ports:
       - '9000:9000'
-    volumes:
-      - v_wordpress:/www/wordpress
+    volumes: *wordpress-volume
     depends_on: *inception-depends-on
     networks:
       - inception
-
-volumes:
-  v_wordpress:
 
 networks:
   inception:

@@ -18,7 +18,7 @@ RUN apk update; \
     sed -i 's|listen = .*|listen = 0.0.0.0:9000|g' ${PHP_PATH_CONFIG_FILE}; \
     sed -i 's|user\s*=\s*nobody|user = www|g' ${PHP_PATH_CONFIG_FILE}; \
     sed -i 's|group\s*=\s*nobody|group = www|g' ${PHP_PATH_CONFIG_FILE}; \
-    sed -i "5i ${LOG_ACCESS}\n\n" ${PHP_PATH_CONFIG_FILE}; \
+    sed -i "5i ${LOG_ACCESS}\n\n\[global\]\n${LOG_ERROR}\n\[www\]\n\n" ${PHP_PATH_CONFIG_FILE}; \
     wget -P /usr/bin ${WP_CLI}; \
     mv /usr/bin/wp-cli.phar /usr/bin/wp; \
     chmod +x /usr/bin/wp; \

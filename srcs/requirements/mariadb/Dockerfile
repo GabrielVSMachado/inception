@@ -1,9 +1,5 @@
 FROM alpine:3.16
 
-ARG MARIADB_ROOT_PASSWORD
-ARG MARIADB_USER_PASSWORD
-ARG MARIADB_USER
-
 COPY --chown=root:root entrypoint.sh /usr/bin/
 
 RUN apk update; \
