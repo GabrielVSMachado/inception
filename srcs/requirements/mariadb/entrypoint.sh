@@ -39,6 +39,8 @@ export DATABASE_ALREADY_EXISTS="false"
 
 [ "$DATABASE_ALREADY_EXISTS" != "true" ] && entrypoint
 
+sed -i '7i socket = /tmp/mysqld.sock\n' /etc/my.cnf
+
 echo "Mariadb ready to start !!!"
 
 exec mariadbd --user=mysql

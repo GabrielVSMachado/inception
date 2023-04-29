@@ -12,4 +12,4 @@ EXPOSE 3306
 
 VOLUME /var/lib/mysql
 
-ENTRYPOINT ["entrypoint.sh"]
+CMD ["entrypoint.sh"]

@@ -8,7 +8,8 @@ all: | $(USER_DIR)
 	sudo $(COMMAND) up --build
 
 $(USER_DIR):
-	sudo mkdir -p $(USER_DIR) && sudo chown -R user42:user42 $(USER_DIR)
+	sudo mkdir -p $(USER_DIR)
+	sudo chown -R user42:user42 $(USER_DIR)
 	mkdir -p $(VOLUME_PATH_MARIADB)
 	mkdir -p $(VOLUME_PATH_WORDPRESS)
 
@@ -16,8 +17,7 @@ clean:
 	$(COMMAND) down
 
 fclean:
-	$(COMMAND) down --rmi all -v
-	sudo $(RM) $(USER_DIR)
+	$(COMMAND) down --rmi all
 
 re: fclean all
 

@@ -26,7 +26,7 @@ services:
     ports:
       - '3306:3306'
     healthcheck:
-      test: ["CMD", "mariadb-admin", "-u", "root", "--password=${MARIADB_ROOT_PASSWORD}", "ping", "-h", "localhost"]
+      test: ["CMD", "mariadb-admin", "-u", "root", "--password=${MARIADB_ROOT_PASSWORD}", "ping", "-h", "localhost", "--socket=/tmp/mysqld.sock"]
       interval: 15s
       retries: 3
 
