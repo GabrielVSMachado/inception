@@ -2,8 +2,6 @@
 
 set -e
 
-declare -g DATABASE_ALREADY_EXISTS
-
 entrypoint() {
 
 mariadb-install-db --user=mysql --datadir=/var/lib/mysql
@@ -34,18 +32,13 @@ mariadb-server stop
 
 }
 
-if [ -f "/var/lib/mysql" ]; then
-  DATABASE_ALREADY_EXISTS="true"
-fi
+export DATABASE_ALREADY_EXISTS="false"
+
+[ $(ls /var/lib/mysql | wc -l) -gt 0 ] && export DATABASE_ALREADY_EXISTS="true"
 
 
-
-if [ -z "$DATABASE_ALREADY_EXISTS" ]; then
+[ "$DATABASE_ALREADY_EXISTS" != "true" ] && entrypoint
 
 echo "Mariadb ready to start !!!"
 
-else
-
-entrypoint
-
-fi
+exec mariadbd --user=mysql

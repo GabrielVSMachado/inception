@@ -1,5 +1,9 @@
 version: '3'
 
+x-inception-depends-on: &inception-depends-on
+  db:
+    condition: service_healthy
+
 services:
   db:
     build:
@@ -13,7 +17,9 @@ services:
     env_file:
       - .env
     volumes:
-      - v_mariadb:/var/lib/mysql
+      - type: bind
+        source: /home/gvitor-s/data/mariadb
+        target: /var/lib/mysql
     networks:
       - inception
     ports:
@@ -34,6 +40,7 @@ services:
       - '443:443'
     networks:
       - inception
+    depends_on: *inception-depends-on
 
   web_app:
     build:
@@ -47,14 +54,11 @@ services:
       - '9000:9000'
     volumes:
       - v_wordpress:/www/wordpress
-    depends_on:
-      db:
-        condition: service_healthy
+    depends_on: *inception-depends-on
     networks:
       - inception
 
 volumes:
-  v_mariadb:
   v_wordpress:
 
 networks:
